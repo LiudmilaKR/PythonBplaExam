@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление нового дрона add_drone</title>
+</head>
+<body>
+    <h3>Заполните данные для нового дрона</h3>
+      <form method="POST">
+        <label>max altitude:</label>
+        <input type="number" name="max_altitude" placeholder="Введите максимальную высоту" required><br />
+        <label>max speed:</label>
+        <input type="number" name="max_speed" placeholder="Введите скорость" required><br />
+        <label>max flight time:</label>
+        <input type="number" name="max_flight_time" placeholder="Введите время полета" required><br />
+        <label>serial number:</label>
+        <input type="text" name="serial_number" placeholder="Введите серийный номер" required><br />
+        <label>model:</label>
+        <input type="text" name="model" placeholder="Введите модель" required><br />
+        <label>manufacturer:</label>
+        <input type="text" name="manufacturer" placeholder="Введите производителя" required><br />
+        <input type="submit" value="submit" /><br />
+    </form>
+</body>
+</html>
