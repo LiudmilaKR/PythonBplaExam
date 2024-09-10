@@ -1,9 +1,7 @@
-from abc import ABC, abstractmethod
 from database import *
 from model import *
 
 
-# Паттерн Абстрактная фабрика для создания подключений к базе данных
 class IDroneRepository(ABC):
     """
     Абстрактный интерфейс хранилища
@@ -25,11 +23,6 @@ class IDroneRepository(ABC):
         """
         pass
 
-    # @abstractmethod
-    # def update_drone_status(self, id: int, status: str):
-    #     """Обновляем статус дрона по id (ожидание, в полете, зарядка)"""
-    #     pass
-
     @abstractmethod
     def add_drone(self, drone: Drone):
         """
@@ -38,9 +31,21 @@ class IDroneRepository(ABC):
         """
         pass
 
-    # @abstractmethod
-    # def remove_drone(self, id: int):
-    #     pass
+    @abstractmethod
+    def remove_drone(self, drone_id: int):
+        """
+        Абстрактый метод удаления дрона из репозиторий
+        :param drone_id: Id дрона для удаления
+        """
+        pass
+
+    @abstractmethod
+    def update_drone(self, drone_id: int):
+        """
+        Абстрактный метод обновления данных дрона
+        :param drone_id: Id дрона для обновления данных
+        """
+        pass
 
 
 class MySqlDroneRepository(IDroneRepository):
@@ -59,6 +64,7 @@ class MySqlDroneRepository(IDroneRepository):
         Метод получения списока всех дронов из базы данных
         :return: Список всех дронов
         """
+        logging.info('Запуск метода get_all_drones для MySql')
         connect_manager = DBConnectionManager(self.mysql_bd)
         connect = connect_manager.get_connection()
         cur_cursor = connect.cursor()
@@ -73,6 +79,12 @@ class MySqlDroneRepository(IDroneRepository):
         pass
 
     def add_drone(self, drone: Drone):
+        pass
+
+    def remove_drone(self, drone_id: int):
+        pass
+
+    def update_drone(self, drone_id: int):
         pass
 
 
@@ -92,6 +104,7 @@ class SqliteDroneRepository(IDroneRepository):
         Метод получения списока всех дронов из базы данных
         :return: Список всех дронов
         """
+        logging.info('Запуск метода get_all_drones для SqLite')
         connect_manager = DBConnectionManager(self.sqlite_bd)
         connect = connect_manager.get_connection()
         cur_cursor = connect.cursor()
@@ -105,8 +118,9 @@ class SqliteDroneRepository(IDroneRepository):
     def add_drone(self, drone: Drone):
         """
         Метод добавления конкретного дрона в базу данных
-        :param drone: Экземляр класса Drone
+        :param drone: Объект, реализующий класс Drone
         """
+        logging.info('Запуск метода add_drone для SqLite')
         connect_manager = DBConnectionManager(self.sqlite_bd)
         connect = connect_manager.get_connection()
         cur_cursor = connect.cursor()
@@ -117,9 +131,7 @@ class SqliteDroneRepository(IDroneRepository):
                                                       'serial_number', 'model', 'manufacturer']).values(
                 drone.max_altitude, drone.max_speed, drone.max_flight_time, drone.serial_number, drone.model,
                 drone.manufacturer).get_query()
-            print(f'insert_query={insert_query}')
             params = query_builder.get_params()
-            print(f'params={params}')
             cur_cursor.execute(insert_query, params)
             connect.commit()
             connect_manager.close_connection()
@@ -127,6 +139,11 @@ class SqliteDroneRepository(IDroneRepository):
             print(f'Ошибка! Незвозможно добавить запись: {e}')
 
     def get_drone_by_id(self, drone_id: str):
+        """
+        Метод получения конктретного дрона из базы данных
+        :param drone_id: id дрона, получаемого из базы данных
+        """
+        logging.info('Запуск метода get_drone_by_id для SqLite')
         connect_management = DBConnectionManager(self.sqlite_bd)
         connect = connect_management.get_connection()
         cur_cursor = connect.cursor()
@@ -136,3 +153,9 @@ class SqliteDroneRepository(IDroneRepository):
         result = cur_cursor.fetchall()
         connect_management.close_connection()
         return result
+
+    def remove_drone(self, drone_id: int):
+        pass
+
+    def update_drone(self, drone_id: int):
+        pass

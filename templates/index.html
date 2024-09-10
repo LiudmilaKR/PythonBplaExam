@@ -6,8 +6,11 @@
 </head>
 <body>
     <h1>Веб-приложение для управления дроном</h1>
-        <button class="btn" type="button" onclick="window.location.href='{{ url_for('create_drone') }}';">Создать дрон</button><br/>
         <button class="btn" type="button" onclick="window.location.href='{{ url_for('get_drones') }}';">Список дронов</button><br/>
+        <button class="btn" type="button" onclick="window.location.href='{{ url_for('create_drone') }}';">Создать дрон</button><br/>
+        <button class="btn" type="button">Обновить дрон</button><br/>
+        <button class="btn" type="button">Получить дрон</button><br/>
+        <button class="btn" type="button">Удалить дрон</button><br/>
     <h2>Выполнение миссий дроном</h2>
         <button class="btn" type="button" onclick="window.location.href='{{ url_for('recon_mission') }}';">Разведка</button>
         <button class="btn" type="button" onclick="window.location.href='{{ url_for('patrol_mission') }}';">Патрулирование</button>

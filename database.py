@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 import sqlite3
 import mysql.connector
+import logging
 
 
-# Паттерн Абстрактная фабрика
 class BDFactory(ABC):
     """
     Создание подключения к различным базам данных (интерфейс фабрики)
@@ -24,6 +24,7 @@ class SQLiteFactory(BDFactory):
         """
         Метод подключения к SQLite
         """
+        logging.info('Запуск метода connect для SQLiteFactory')
         return sqlite3.connect('bpla.db')
 
 
@@ -35,6 +36,7 @@ class MySQLFactory(BDFactory):
         """
         Метод подключения к MySql
         """
+        logging.info('Запуск метода connect для MySQLFactory')
         return mysql.connector.connect(host='127.0.0.1', user='newuser', passwd='12357***', database='bpla')
 
 
@@ -49,7 +51,6 @@ class PostgresSQLFactory(BDFactory):
         pass
 
 
-# Паттерн Строитель
 class QueryBuilder:
     """
     Класс для создания SQL-запросов
@@ -74,6 +75,7 @@ class QueryBuilder:
         :param columns: Столбцы для запроса
         :return: Экземляр класса QueryBuilder
         """
+        logging.info('Запуск метода select для QueryBuilder')
         self._query['select'] = f'SELECT {columns} FROM {table}'
         return self
 
@@ -83,6 +85,7 @@ class QueryBuilder:
         :param condition: Условия запроса
         :return: Экземляр класса QueryBuilder
         """
+        logging.info('Запуск метода where для QueryBuilder')
         self._query['where'] = f'WHERE {condition}'
         return self
 
@@ -93,6 +96,7 @@ class QueryBuilder:
         :param ord: Метод сортировки (ASC - по возрастанию, DESC - по убыванию)
         :return: Экземляр класса QueryBuilder
         """
+        logging.info('Запуск метода order_by для QueryBuilder')
         self._query['order_by'] = f'ORDER BY {order} {ord}'
         return self
 
@@ -102,6 +106,7 @@ class QueryBuilder:
         :param values: Параметры для вставки в базу данных
         :return: Экземляр класса QueryBuilder
         """
+        logging.info('Запуск метода values для QueryBuilder')
         self._params.extend(values)
         return self
 
@@ -111,6 +116,7 @@ class QueryBuilder:
         :param parameters: Дополнитеьлные параметры для вставки в базу данных
         :return: Экземляр класса QueryBuilder
         """
+        logging.info('Запуск метода add_params для QueryBuilder')
         self._params.extend(parameters)
         return self
 
@@ -119,6 +125,7 @@ class QueryBuilder:
         Метод для получения списка параметров
         :return: Список параметров
         """
+        logging.info('Запуск метода get_params для QueryBuilder')
         return self._params
 
     def insert_into(self, table, columns):
@@ -128,7 +135,7 @@ class QueryBuilder:
         :param columns: Столбцы, в которые добавляются данные
         :return: Экземляр класса QueryBuilder
         """
-        # Метод для создания INSERT INTO части запроса
+        logging.info('Запуск метода insert_into для QueryBuilder')
         cols = ','.join(columns)
         placeholders = ','.join(['?'] * len(columns))
         self._query['insert_into'] = f'INSERT INTO {table} ({cols})'
@@ -140,6 +147,7 @@ class QueryBuilder:
         Метод создания итогового запроса
         :return: Экземляр класса QueryBuilder
         """
+        logging.info('Запуск метода get_query для QueryBuilder')
         query = ''
         if self._query['select']:
             query = f'{self._query["select"]}'
@@ -169,6 +177,7 @@ class DBConnectionManager:
         Метод подключения к базе данных
         :return: Подключение к базе данных
         """
+        logging.info('Запуск метода get_connection для DBConnectionManager')
         if self._connection is None:
             self._connection = self._bd.connect()
         return self._connection
@@ -177,6 +186,7 @@ class DBConnectionManager:
         """
         Метод закрытия подключения к базе данных
         """
+        logging.info('Запуск метода close_connection для DBConnectionManager')
         if self._connection:
             self._connection.close()
             self._connection = None
